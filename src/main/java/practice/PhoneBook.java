@@ -1,12 +1,8 @@
 package practice;
-
 import java.util.*;
 
 public class PhoneBook {
     private final TreeMap<String, String> phoneBook = new TreeMap<>();
-
-    private String name;
-    private String number;
 
     public static boolean isNum(String value) {
         String num = "[0-9]{11}";
@@ -22,56 +18,46 @@ public class PhoneBook {
         // проверьте корректность формата имени и телефона
         // (рекомедуется написать отдельные методы для проверки является строка именем/телефоном)
         // если такой номер уже есть в списке, то перезаписать имя абонента
-
-        String regex = "[-()+\\s]";
-        String formatPhone = phone.replaceAll(regex, "");
-
-        if (!isName(name) || !isNum(formatPhone)) {
+        if (!isName(name) || !isNum(phone)) {
             System.out.println("Неверный формат ввода.");
 
-        } else if (phoneBook.containsKey(formatPhone)) {
+        } else if (phoneBook.containsKey(phone)) {
             for (Map.Entry <String, String> entry : phoneBook.entrySet()) {
-                if (entry.getKey().equals(formatPhone)) {
-                    phoneBook.remove(entry.getKey());
-                    System.out.println(phoneBook.put(formatPhone, name));
+                if (entry.getKey().equals(phone)) {
+                    phoneBook.replace(entry.getKey(), entry.getValue(), name);
                     System.out.println("Контакт перезаписан!");
                     break;
                 }
             }
+
         } else if (phoneBook.containsValue(name)) {
-            String secondPhone;
             for (Map.Entry <String, String> entry : phoneBook.entrySet()) {
                 if (entry.getValue().equals(name)) {
-                    secondPhone = entry.getKey() + ", " + formatPhone;
+                    String secondPhone = entry.getKey() + ", " + phone;
                     phoneBook.remove(entry.getKey());
                     phoneBook.put(secondPhone, name);
                     System.out.println("Номер добавлен");
                     break;
                 }
             }
+
         } else {
-            phoneBook.put(formatPhone, name);
+            phoneBook.put(phone, name);
             System.out.println("Контакт сохранен!\n");
         }
     }
 
-
-
     public String getContactByPhone(String phone) {
         // формат одного контакта "Имя - Телефон"
         // если контакт не найдены - вернуть пустую строку
-
-        String regex = "[-()+\\s]";
-        String formatPhone = phone.replaceAll(regex, "");
-        formatPhone = formatPhone.replaceFirst("8", "7");
         String key = "";
         String value = "";
 
-        if (phoneBook.containsKey(formatPhone)) {
+        if (phoneBook.containsKey(phone)) {
             for (Map.Entry<String, String> entry : phoneBook.entrySet()){
                 key = entry.getKey();
                 value = entry.getValue();
-                if (key.equals(formatPhone)) {
+                if (key.equals(phone)) {
                     break;
                 }
             }
@@ -109,13 +95,4 @@ public class PhoneBook {
         }
         return set;
     }
-
-    // для обхода Map используйте получение пары ключ->значение Map.Entry<String,String>
-    // это поможет вам найти все ключи (key) по значению (value)
-    /*
-        for (Map.Entry<String, String> entry : map.entrySet()){
-            String key = entry.getKey(); // получения ключа
-            String value = entry.getValue(); // получения значение
-        }
-    */
 }
